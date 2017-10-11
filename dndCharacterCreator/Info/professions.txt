@@ -1,0 +1,13 @@
+NAME | PREFERRED ATTR | HIT DIE |
+Barbarian, STR CON, 12
+Bard, CHA DEX, 8
+Cleric, WIS CON|STR, 8
+Druid, WIS CON, 8
+Fighter, STR|DEX STR|INT, 10
+Monk, DEX WIS, 8
+Paladin, STR CHA, 10
+Ranger, DEX WIS, 10
+Rogue, DEX CHA|INT, 8
+Sorcerer, CHA CON, 6
+Warlock, CHA CON, 8
+Wizard, INT CON|DEX, 6
