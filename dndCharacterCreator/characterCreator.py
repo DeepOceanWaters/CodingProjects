@@ -1,8 +1,19 @@
+#!/usr/bin/python
+
 # This is the main program
 # Purpose is to create a randomly generated Dungeons and Dragons character
 # This includes: name, race, class, attributes (e.g. STR/DEX/etc.)
 
 # This uses DnD 5th edition as reference
+
+# TODO: add ability to choose attribute allocation:
+#           - using standard array
+#           -
+#       add ability to choose gender:
+#           - binary or non-binary
+#
+#       choose to be multi-racial:
+#           - randomly create a lineage of races:
 
 from attribute import Attribute
 from character import Character
@@ -11,21 +22,57 @@ from race import Race
 
 import copy
 import random
+import sys
 
 def main():
-    # add race OR replace races
-    # add class OR replace classes
-    # add names OR replace names
     # determine how attributes are set:
     #   - use array
     #   - use random
     #   - use point buy system
     #
+    # set default attribute generation style to: standard array
+    attrGenStyle = "a"
+    # set default range for the random attribute generation style
+    attrRandRange = range(2, 18)
+    # remove the program name from argv
+    args = sys.argv[1:]
+    # iterate over the arguments
+    while args:
+        arg = args.pop(0)
+        if arg == "--help":
+            print("")
+            print("Below are command-line arguments you can use:")
+            print("    Attribute Creation")
+            print("       -a: use standard array (default)")
+            print("       -r: use random values (range 2-18)")
+            print("           [num a] [num b]:  (range a-b)")
+            print("       -b: use point-buy system")
+            print("")
+            return
+        # set attribute generation style to: random
+        elif arg == "-r":
+            attrGenStyle = "r"
+            # peak ahead unless there are no more arguments
+            if args:
+                arg = args[0]
+                if arg[0] is not '-':
+                    rangeMin = int(args.pop(0))
+                    rangeMax = int(args.pop(0))
+                    attrRandRange = range(rangeMin, rangeMax)
+        # set attribute generation style to: point-buy system
+        elif arg == "-b":
+            attrGenStyle = "b"
+        # set attribute generation style to: standard array
+        elif arg == "-a":
+            attrGenStyle = "a"
+        # unknown argument, raise exception
+        else:
+            raise Exception("""Unrecognized command-line argument: {}.\n
+                               Use --help for more information""".format(arg))
     # setup names
     firstNamesFile = "Info/firstNames.txt"
     lastNamesFile = "Info/lastNames.txt"
-    firstNames = setupNames(firstNamesFile)
-    lastNames = setupNames(lastNamesFile)
+    Character.addNames(firstNamesFile, lastNamesFile)
     # setup attributes
     attributesFile = "Info/attributes.txt"
     Attribute.setupAttributes(attributesFile)
@@ -36,56 +83,12 @@ def main():
     racesFile = "Info/races.txt"
     Race.setupRaces(racesFile)
     # create the Character
-    character = createCharacter(firstNames, lastNames)
+    character = Character.initRandomCharacter(attrGenStyle)
     # print the Character
-    print("\n")
+    print('')
     character.printCharacter()
-    print("\n")
+    print('')
     return
-
-def createCharacter(firstNames, lastNames):
-    character = Character()
-    # determine name
-    genName(character, firstNames, lastNames)
-    # determine profession
-    genProfession(character)
-    # determine race
-    genRace(character)
-    # set attributes
-    genAttributes(character)
-    return character
-
-def genName(character, firstNames, lastNames):
-    character.firstName = random.choice(firstNames)
-    character.lastName = random.choice(lastNames)
-    return
-
-def genProfession(character):
-    professions = list(Profession.professions.values())
-    profession = random.choice(professions)
-    character.profession = copy.copy(profession)
-    return
-
-def genRace(character):
-    races = list(Race.races.values())
-    character.race = random.choice(races)
-    return
-
-def genAttributes(character):
-    numAttributes = len(Attribute.attributes)
-    attrVals = [random.randint(2, 18) for x in range(numAttributes)]
-    attrVals.sort(reverse=True)
-    character.setAttributes(attrVals)
-    return
-
-# Get names from a file
-def setupNames(fileName):
-    names = []
-    with open(fileName) as f:
-        for line in f:
-            name = line[:-1]
-            names.append(name)
-    return names
 
 if __name__ == "__main__":
     main()

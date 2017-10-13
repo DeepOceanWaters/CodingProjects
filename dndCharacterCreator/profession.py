@@ -1,5 +1,7 @@
 from attribute import Attribute
 
+import random
+
 class Profession:
     professions = {}
 
@@ -36,6 +38,22 @@ class Profession:
                 # add attribute to profession's attribute list
                 self.attributes[attrName] = newAttr
         return
+
+    def getAttributeByName(self, attrName):
+        return self.attributes[attrName]
+
+    def getSortedAttrs(self):
+        numAttrs = len(Attribute.attributes)
+        sortedAttrs = [None]*numAttrs
+        possiblePositions = [x for x in range(numAttrs)]
+        for attr in self.attributes.values():
+            position = attr.preferrenceLvl
+            # if position is already filled, find new random position
+            while sortedAttrs[position] is not None:
+                random.shuffle(possiblePositions)
+                position = possiblePositions.pop()
+            sortedAttrs[position] = attr
+        return sortedAttrs
 
     def toKey(self):
         return self.name.upper()

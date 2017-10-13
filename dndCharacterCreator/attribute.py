@@ -2,11 +2,12 @@ import copy
 
 class Attribute():
     attributes = {}
+    standardArray = [15, 14, 13, 12, 10, 8]
 
     def __init__(self):
         self.name = None
         self.value = None
-        self.preferrenceLvll = None
+        self.preferrenceLvl = None
         return
 
     def toShortName(self):
