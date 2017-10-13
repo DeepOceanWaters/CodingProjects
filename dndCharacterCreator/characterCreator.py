@@ -73,6 +73,9 @@ def main():
     firstNamesFile = "Info/firstNames.txt"
     lastNamesFile = "Info/lastNames.txt"
     Character.addNames(firstNamesFile, lastNamesFile)
+    # setup adjectives
+    adjectivesFile = "Info/adjectives.txt"
+    Character.setupAdjectives(adjectivesFile)
     # setup attributes
     attributesFile = "Info/attributes.txt"
     Attribute.setupAttributes(attributesFile)

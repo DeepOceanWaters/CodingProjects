@@ -10,6 +10,8 @@ class Character:
     #   names
     firstNames = []
     lastNames = []
+    # adjectives
+    adjectives = []
     #   attributes
     #       'a' = standard array
     #       'b' = point-buy system
@@ -28,6 +30,7 @@ class Character:
         self.profession = None
         self.attributes = {}
         self.attrGenStyle = Character.attrGenStyle
+        self.personality = []
         # self.personality = None
         return
 
@@ -41,9 +44,18 @@ class Character:
             self.profession.name))
         for attr in self.attributes.values():
             print("{:>15}: {:>2}".format(attr.name, attr.value))
+        print("Personality: {}, {}, {}".format(*self.personality))
         return
 
     # setup character generation variables
+
+    @classmethod
+    def setupAdjectives(cls, fileName):
+        with open(fileName) as f:
+            for line in f:
+                adj = line.strip()
+                cls.adjectives.append(adj)
+        return
 
     @classmethod
     def addNames(cls, firstNamesFile, lastNamesFile):
@@ -93,6 +105,8 @@ class Character:
         character.genNewRace()
         # set attributes
         character.genNewAttributes()
+        # set personality
+        character.genNewPersonality()
         return character
 
     def genNewName(self):
@@ -109,6 +123,12 @@ class Character:
         professions = list(Profession.professions.values())
         profession = random.choice(professions)
         self.profession = profession
+        return
+
+    def genNewPersonality(self):
+        for x in range(3):
+            adj = random.choice(Character.adjectives)
+            self.personality.append(adj)
         return
 
     def genNewAttributes(self, genStyle=None):
